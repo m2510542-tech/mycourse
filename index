@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Present Simple – A2 Interactive Lesson</title>
+<style>
+  :root{
+    --primary:#4f46e5;
+    --primary-light:#eef2ff;
+    --ok:#16a34a;
+    --ok-light:#dcfce7;
+    --bad:#dc2626;
+    --bad-light:#fee2e2;
+    --text:#1e293b;
+    --muted:#64748b;
+    --border:#e2e8f0;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Segoe UI",Roboto,system-ui,-apple-system,sans-serif;
+    background:#f1f5f9;
+    color:var(--text);
+    line-height:1.6;
+  }
+  header{
+    background:linear-gradient(135deg,#4f46e5,#7c3aed 60%,#9333ea);
+    color:#fff;
+    text-align:center;
+    padding:44px 20px 56px;
+  }
+  header h1{margin:0 0 8px;font-size:clamp(1.6rem,4vw,2.4rem);letter-spacing:-.5px;}
+  header p{margin:0;opacity:.92;}
+  .badge{
+    display:inline-block;
+    background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.38);
+    padding:4px 14px;
+    border-radius:999px;
+    font-size:.78rem;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+    margin-bottom:14px;
+  }
+  main{max-width:880px;margin:-30px auto 60px;padding:0 16px;}
+  .card{
+    background:#fff;
+    border-radius:16px;
+    padding:24px;
+    box-shadow:0 6px 24px rgba(15,23,42,.08);
+    margin-bottom:24px;
+  }
+  .card h2{
+    margin:0 0 6px;
+    font-size:1.22rem;
+    display:flex;align-items:center;gap:10px;
+  }
+  .card h2 .num{
+    background:var(--primary);color:#fff;
+    width:30px;height:30px;border-radius:9px;
+    display:grid;place-items:center;font-size:.92rem;flex:0 0 auto;
+  }
+  .sub{color:var(--muted);font-size:.9rem;margin:0 0 18px;}
+
+  /* ---------- Rules ---------- */
+  .rules{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));}
+  .rule{background:var(--primary-light);border-radius:12px;padding:14px 16px;}
+  .rule h3{margin:0 0 8px;font-size:.85rem;color:#3730a3;text-transform:uppercase;letter-spacing:.6px;}
+  .rule p{margin:5px 0;font-size:.94rem;}
+  .rule b{color:#4338ca;}
+  .rule .ex{color:var(--muted);font-size:.86rem;font-style:italic;}
+
+  /* ---------- Question blocks ---------- */
+  .q-item{padding:14px 0;border-bottom:1px dashed var(--border);}
+  .q-item:last-child{border-bottom:none;padding-bottom:0;}
+  .q-text{margin:0 0 10px;font-weight:600;}
+  .q-num{
+    display:inline-grid;place-items:center;
+    width:22px;height:22px;border-radius:50%;
+    background:var(--primary-light);color:var(--primary);
+    font-size:.76rem;margin-right:8px;font-weight:700;
+  }
+
+  /* ---------- Multiple choice ---------- */
+  .options{display:flex;flex-wrap:wrap;gap:8px;}
+  .opt{
+    font:inherit;
+    padding:8px 18px;
+    border-radius:10px;
+    border:2px solid var(--border);
+    background:#fff;
+    cursor:pointer;
+    transition:.15s;
+  }
+  .opt:hover{border-color:#c7d2fe;background:#f8faff;}
+  .opt.selected{border-color:var(--primary);background:var(--primary-light);color:#3730a3;font-weight:600;}
+  .opt.correct{border-color:var(--ok);background:var(--ok-light);color:#166534;font-weight:600;}
+  .opt.wrong{border-color:var(--bad);background:var(--bad-light);color:#991b1b;font-weight:600;}
+
+  /* ---------- Fill in the gaps ---------- */
+  .gap-line{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-weight:600;}
+  .hint{color:var(--muted);font-weight:400;font-size:.88rem;}
+  input.gap{
+    font:inherit;
+    border:2px solid var(--border);
+    border-radius:8px;
+    padding:6px 10px;
+    width:150px;
+    text-align:center;
+    transition:.15s;
+  }
+  input.gap:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px #e0e7ff;}
+  input.gap.correct{border-color:var(--ok);background:var(--ok-light);}
+  input.gap.wrong{border-color:var(--bad);background:var(--bad-light);}
+
+  /* ---------- Selects ---------- */
+  select.pick{
+    font:inherit;font-weight:600;
+    border:2px solid var(--border);
+    border-radius:8px;
+    padding:6px 10px;
+    background:#fff;
+    cursor:pointer;
+    transition:.15s;
+  }
+  select.pick:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px #e0e7ff;}
+  select.pick.correct{border-color:var(--ok);background:var(--ok-light);}
+  select.pick.wrong{border-color:var(--bad);background:var(--bad-light);}
+
+  /* ---------- Word order ---------- */
+  .answer-line,.pool{
+    display:flex;flex-wrap:wrap;gap:8px;
+    min-height:48px;
+    padding:8px;
+    border-radius:10px;
+  }
+  .answer-line{background:#fff;border:2px solid var(--border);margin-bottom:8px;}
+  .answer-line.correct{border-color:var(--ok);background:var(--ok-light);}
+  .answer-line.wrong{border-color:var(--bad);background:var(--bad-light);}
+  .pool{background:#f8fafc;border:2px dashed var(--border);}
+  .chip{
+    font:inherit;
+    padding:6px 14px;
+    border-radius:8px;
+    border:2px solid #c7d2fe;
+    background:#eef2ff;
+    color:#3730a3;
+    cursor:pointer;
+    font-weight:600;
+    transition:.15s;
+  }
+  .chip:hover{background:#e0e7ff;transform:translateY(-1px);}
+  .answer-line .chip{background:#fff;border-color:#a5b4fc;}
+  .correction{font-size:.9rem;color:#15803d;font-weight:600;margin:6px 0 0;min-height:0;}
+
+  /* ---------- Buttons / results ---------- */
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;}
+  .btn{
+    font:inherit;font-weight:600;
+    padding:10px 22px;
+    border-radius:10px;
+    border:none;
+    cursor:pointer;
+    transition:.15s;
+  }
+  .btn-primary{background:var(--primary);color:#fff;box-shadow:0 4px 12px rgba(79,70,229,.3);}
+  .btn-primary:hover{background:#4338ca;transform:translateY(-1px);}
+  .btn-ghost{background:#f1f5f9;color:var(--muted);}
+  .btn-ghost:hover{background:#e2e8f0;color:var(--text);}
+  .result{
+    margin-top:14px;
+    padding:12px 16px;
+    border-radius:10px;
+    font-weight:600;
+    display:none;
+  }
+  .result.show{display:block;}
+  .result.good{background:var(--ok-light);color:#166534;}
+  .result.ok{background:#fef9c3;color:#854d0e;}
+
+  footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 20px 40px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">A2 · English Grammar</div>
+  <h1>Present Simple</h1>
+  <p>Learn the rules and practise with 4 interactive activities</p>
+</header>
+
+<main>
+
+  <!-- ================= RULES ================= -->
+  <section class="card">
+    <h2><span class="num">📘</span> Let's remember the rules</h2>
+    <p class="sub">Look at the examples before you start the exercises.</p>
+    <div class="rules">
+      <div class="rule">
+        <h3>✔ Affirmative</h3>
+        <p><b>I / You / We / They</b> + verb</p>
+        <p class="ex">They <b>play</b> tennis.</p>
+        <p><b>He / She / It</b> + verb + <b>-s</b></p>
+        <p class="ex">She <b>plays</b> tennis.</p>
+      </div>
+      <div class="rule">
+        <h3>✘ Negative</h3>
+        <p>I / You / We / They + <b>don't</b> + verb</p>
+        <p class="ex">We <b>don't</b> work on Sunday.</p>
+        <p>He / She / It + <b>doesn't</b> + verb</p>
+        <p class="ex">He <b>doesn't</b> work on Sunday.</p>
+      </div>
+      <div class="rule">
+        <h3>? Questions</h3>
+        <p><b>Do</b> + I/you/we/they + verb?</p>
+        <p class="ex"><b>Do</b> you like coffee?</p>
+        <p><b>Does</b> + he/she/it + verb?</p>
+        <p class="ex"><b>Does</b> she like coffee?</p>
+      </div>
+      <div class="rule">
+        <h3>✎ Spelling: -s / -es</h3>
+        <p>+ <b>-s</b>: work → works, read → reads</p>
+        <p>+ <b>-es</b>: watch → watches, go → goes, do → does</p>
+        <p>y → <b>-ies</b>: study → studies, fly → flies</p>
+        <p>have → <b>has</b></p>
+      </div>
+      <div class="rule">
+        <h3>⏱ Adverbs of frequency</h3>
+        <p><b>always, usually, often, sometimes, never</b></p>
+        <p class="ex">I <b>always</b> get up at 7.</p>
+        <p class="ex">He <b>never</b> eats meat.</p>
+      </div>
+      <div class="rule">
+        <h3>🕒 Time expressions</h3>
+        <p><b>every day, on Mondays, at night, in the morning, once a week</b></p>
+        <p class="ex">She goes to the gym <b>every day</b>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ACTIVITY 1 ================= -->
+  <section class="card">
+    <h2><span class="num">1</span> Choose the correct form</h2>
+    <p class="sub">Click on the correct answer for each sentence.</p>
+    <div id="mcWrap"></div>
+    <div class="actions">
+      <button class="btn btn-primary" id="mcCheck">Check answers</button>
+      <button class="btn btn-ghost" id="mcReset">Reset</button>
+    </div>
+    <div class="result" id="mcResult"></div>
+  </section>
+
+  <!-- ================= ACTIVITY 2 ================= -->
+  <section class="card">
+    <h2><span class="num">2</span> Complete the sentences</h2>
+    <p class="sub">Type the verb in the correct Present Simple form. The verb is in brackets.</p>
+    <div id="gapWrap"></div>
+    <div class="actions">
+      <button class="btn btn-primary" id="gapCheck">Check answers</button>
+      <button class="btn btn-ghost" id="gapReset">Reset</button>
+    </div>
+    <div class="result" id="gapResult"></div>
+  </section>
+
+  <!-- ================= ACTIVITY 3 ================= -->
+  <section class="card">
+    <h2><span class="num">3</span> Do / Does / Don't / Doesn't</h2>
+    <p class="sub">Choose the correct word from the list for each gap.</p>
+    <div id="doWrap"></div>
+    <div class="actions">
+      <button class="btn btn-primary" id="doCheck">Check answers</button>
+      <button class="btn btn-ghost" id="doReset">Reset</button>
+    </div>
+    <div class="result" id="doResult"></div>
+  </section>
+
+  <!-- ================= ACTIVITY 4 ================= -->
+  <section class="card">
+    <h2><span class="num">4</span> Build the sentence</h2>
+    <p class="sub">Click the words to put them in the correct order. Click a word in the answer line to send it back.</p>
+    <div id="orderWrap"></div>
+    <div class="actions">
+      <button class="btn btn-primary" id="orderCheck">Check answers</button>
+      <button class="btn btn-ghost" id="orderReset">Shuffle again</button>
+    </div>
+    <div class="result" id="orderResult"></div>
+  </section>
+
+</main>
+
+<footer>Present Simple · A2 Level · Made for English lessons 🎓</footer>
+
+<script>
+/* =========================================================
+   HELPER FUNCTIONS
+   ========================================================= */
+function normalize(s){
+  return String(s)
+    .toLowerCase()
+    .replace(/[’‘]/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function shuffle(arr){
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function showResult(id, score, total){
+  const el = document.getElementById(id);
+  el.textContent = `Score: ${score} / ${total}  —  ` +
+    (score === total ? "Perfect! 🎉 Great job!" :
+     score >= total * 0.6 ? "Good work! 👍 Keep practising." :
+     "Try again — you can do it! 💪");
+  el.className = "result show " + (score === total ? "good" : "ok");
+}
+
+function hideResult(id){
+  const el = document.getElementById(id);
+  el.className = "result";
+  el.textContent = "";
+}
+
+/* =========================================================
+   ACTIVITY 1 — MULTIPLE CHOICE
+   ========================================================= */
+const mcData = [
+  { q: "My sister ___ the piano very well.",            opts: ["play", "plays", "is play"],   a: 1 },
+  { q: "We ___ to school by bus.",                      opts: ["goes", "go", "going"],        a: 1 },
+  { q: "___ your parents work in a bank?",              opts: ["Does", "Do", "Is"],           a: 1 },
+  { q: "Tom ___ like vegetables.",                      opts: ["doesn't", "don't", "not"],    a: 0 },
+  { q: "I ___ up at seven o'clock every day.",          opts: ["gets", "get", "getting"],     a: 1 },
+  { q: "She ___ TV in the evening.",                    opts: ["watch", "watches", "watching"], a: 1 },
+  { q: "___ he speak English?",                         opts: ["Do", "Does", "Is"],           a: 1 },
+  { q: "They ___ live in London.",                      opts: ["doesn't", "don't", "aren't"], a: 1 }
+];
+
+const mcWrap = document.getElementById("mcWrap");
+
+function renderMC(){
+  mcWrap.innerHTML = "";
+  mcData.forEach((item, i) => {
+    const div = document.createElement("div");
+    div.className = "q-item";
+    div.innerHTML =
+      `<p class="q-text"><span class="q-num">${i + 1}</span>${item.q}</p>
+       <div class="options">
+         ${item.opts.map((o, j) =>
+           `<button type="button" class="opt" data-j="${j}">${o}</button>`).join("")}
+       </div>`;
+    mcWrap.appendChild(div);
+  });
+  hideResult("mcResult");
+}
+
+mcWrap.addEventListener("click", e => {
+  const btn = e.target.closest(".opt");
+  if (!btn) return;
+  const group = btn.parentElement;
+  group.querySelectorAll(".opt").forEach(b => b.classList.remove("selected", "correct", "wrong"));
+  btn.classList.add("selected");
+});
+
+document.getElementById("mcCheck").addEventListener("click", () => {
+  let score = 0;
+  document.querySelectorAll("#mcWrap .options").forEach((group, i) => {
+    const chosen = group.querySelector(".opt.selected");
+    group.querySelectorAll(".opt").forEach(b => b.classList.remove("correct", "wrong"));
+    if (chosen && Number(chosen.dataset.j) === mcData[i].a){
+      chosen.classList.add("correct");
+      score++;
+    } else {
+      if (chosen) chosen.classList.add("wrong");
+      group.querySelector(`.opt[data-j="${mcData[i].a}"]`).classList.add("correct");
+    }
+  });
+  showResult("mcResult", score, mcData.length);
+});
+
+document.getElementById("mcReset").addEventListener("click", renderMC);
+
+/* =========================================================
+   ACTIVITY 2 — FILL IN THE GAPS
+   ========================================================= */
+const gapData = [
+  { pre: "My mother", verb: "(work)",        post: "in a hospital.",          answers: ["works"] },
+  { pre: "I",        verb: "(not / like)",   post: "cold weather.",           answers: ["don't like", "do not like", "dont like"] },
+  { pre: "We",       verb: "(study)",        post: "English every day.",      answers: ["study"] },
+  { pre: "He",       verb: "(not / watch)",  post: "TV in the morning.",      answers: ["doesn't watch", "does not watch", "doesnt watch"] },
+  { pre: "Sara",     verb: "(go)",           post: "to the gym on Mondays.",  answers: ["goes"] },
+  { pre: "They",     verb: "(have)",         post: "two children.",           answers: ["have"] },
+  { pre: "It",       verb: "(rain)",         post: "a lot in autumn.",        answers: ["rains"] },
+  { pre: "You",      verb: "(not / need)",   post: "a ticket.",               answers: ["don't need", "do not need", "dont need"] }
+];
+
+const gapWrap = document.getElementById("gapWrap");
+
+function renderGaps(){
+  gapWrap.innerHTML = "";
+  gapData.forEach((item, i) => {
+    const div = document.createElement("div");
+    div.className = "q-item";
+    div.innerHTML =
+      `<div class="gap-line">
+         <span class="q-num">${i + 1}</span>
+         <span>${item.pre}</span>
+         <span class="hint">${item.verb}</span>
+         <input class="gap" type="text" autocomplete="off" spellcheck="false" placeholder="...">
+         <span>${item.post}</span>
+       </div>`;
+    gapWrap.appendChild(div);
+  });
+  hideResult("gapResult");
+}
+
+document.getElementById("gapCheck").addEventListener("click", () => {
+  let score = 0;
+  document.querySelectorAll("#gapWrap input.gap").forEach((inp, i) => {
+    const val = normalize(inp.value);
+    const ok = val !== "" && gapData[i].answers.some(a => normalize(a) === val);
+    inp.classList.remove("correct", "wrong");
+    inp.classList.add(ok ? "correct" : "wrong");
+    if (ok) score++;
+  });
+  showResult("gapResult", score, gapData.length);
+});
+
+document.getElementById("gapReset").addEventListener("click", renderGaps);
+
+/* =========================================================
+   ACTIVITY 3 — DO / DOES / DON'T / DOESN'T
+   ========================================================= */
+const doData = [
+  { pre: "",    post: "you live near here?",         answers: ["do"] },
+  { pre: "",    post: "she like coffee?",            answers: ["does"] },
+  { pre: "He",  post: "play tennis.",                answers: ["doesn't", "does not", "doesnt"] },
+  { pre: "I",   post: "understand this question.",   answers: ["don't", "do not", "dont"] },
+  { pre: "",    post: "they speak Spanish?",         answers: ["do"] },
+  { pre: "We",  post: "have a car.",                 answers: ["don't", "do not", "dont"] },
+  { pre: "It",  post: "cost very much.",             answers: ["doesn't", "does not", "doesnt"] },
+  { pre: "",    post: "your teacher give homework?", answers: ["does"] }
+];
+
+const doWrap = document.getElementById("doWrap");
+
+function renderDo(){
+  doWrap.innerHTML = "";
+  doData.forEach((item, i) => {
+    const div = document.createElement("div");
+    div.className = "q-item";
+    div.innerHTML =
+      `<div class="gap-line">
+         <span class="q-num">${i + 1}</span>
+         ${item.pre ? `<span>${item.pre}</span>` : ""}
+         <select class="pick">
+           <option value="">-- choose --</option>
+           <option>Do</option>
+           <option>Does</option>
+           <option>Don't</option>
+           <option>Doesn't</option>
+         </select>
+         <span>${item.post}</span>
+       </div>`;
+    doWrap.appendChild(div);
+  });
+  hideResult("doResult");
+}
+
+document.getElementById("doCheck").addEventListener("click", () => {
+  let score = 0;
+  document.querySelectorAll("#doWrap select.pick").forEach((sel, i) => {
+    const val = normalize(sel.value);
+    const ok = val !== "" && doData[i].answers.some(a => normalize(a) === val);
+    sel.classList.remove("correct", "wrong");
+    if (val !== "") sel.classList.add(ok ? "correct" : "wrong");
+    if (ok) score++;
+  });
+  showResult("doResult", score, doData.length);
+});
+
+document.getElementById("doReset").addEventListener("click", renderDo);
+
+/* =========================================================
+   ACTIVITY 4 — WORD ORDER
+   ========================================================= */
+const orderData = [
+  { words: ["She", "reads", "a book", "every night"] },
+  { words: ["Do", "you", "like", "ice cream"] },
+  { words: ["He", "doesn't", "eat", "meat"] },
+  { words: ["My", "friends", "play", "football", "on Sundays"] },
+  { words: ["What", "time", "does", "the film", "start"] },
+  { words: ["I", "usually", "get up", "at six"] }
+];
+
+const orderWrap = document.getElementById("orderWrap");
+
+function renderOrder(){
+  orderWrap.innerHTML = "";
+  orderData.forEach((item, idx) => {
+    // make sure the shuffled version is not identical to the answer
+    let mixed = shuffle(item.words);
+    let guard = 0;
+    while (mixed.join(" ") === item.words.join(" ") && guard < 20){
+      mixed = shuffle(item.words);
+      guard++;
+    }
+
+    const card = document.createElement("div");
+    card.className = "q-item";
+    card.innerHTML =
+      `<p class="q-text"><span class="q-num">${idx + 1}</span>Put the words in order:</p>
+       <div class="answer-line"></div>
+       <div class="pool"></div>
+       <p class="correction"></p>`;
+
+    const pool = card.querySelector(".pool");
+    mixed.forEach(w => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "chip";
+      b.textContent = w;
+      pool.appendChild(b);
+    });
+
+    orderWrap.appendChild(card);
+  });
+  hideResult("orderResult");
+}
+
+orderWrap.addEventListener("click", e => {
+  const chip = e.target.closest(".chip");
+  if (!chip) return;
+  const card = chip.closest(".q-item");
+  const line = card.querySelector(".answer-line");
+  const pool = card.querySelector(".pool");
+  if (chip.parentElement === pool){
+    line.appendChild(chip);
+  } else {
+    pool.appendChild(chip);
+  }
+  // clear old feedback when the student changes the answer
+  line.classList.remove("correct", "wrong");
+  card.querySelector(".correction").textContent = "";
+});
+
+document.getElementById("orderCheck").addEventListener("click", () => {
+  let score = 0;
+  document.querySelectorAll("#orderWrap .q-item").forEach((card, i) => {
+    const line = card.querySelector(".answer-line");
+    const correction = card.querySelector(".correction");
+    const given = [...line.querySelectorAll(".chip")].map(c => c.textContent).join(" ");
+    const correct = orderData[i].words.join(" ");
+
+    line.classList.remove("correct", "wrong");
+    if (normalize(given) === normalize(correct) && given !== ""){
+      line.classList.add("correct");
+      correction.textContent = "";
+      score++;
+    } else {
+      line.classList.add("wrong");
+      correction.textContent = "✔ Correct: " + correct + ".";
+    }
+  });
+  showResult("orderResult", score, orderData.length);
+});
+
+document.getElementById("orderReset").addEventListener("click", renderOrder);
+
+/* =========================================================
+   INIT
+   ========================================================= */
+renderMC();
+renderGaps();
+renderDo();
+renderOrder();
+</script>
+</body>
+</html>
