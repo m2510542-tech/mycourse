@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Present Simple - Interactive English Lesson (A2)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    overflow: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+  }
+  header h1 { font-size: 2.2em; margin-bottom: 8px; }
+  header p { font-size: 1.1em; opacity: 0.95; }
+  .score-bar {
+    background: #f0f4ff;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #e0e7ff;
+  }
+  .score-bar span { font-weight: bold; color: #4a5eb5; }
+  .reset-btn {
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .reset-btn:hover { background: #ee5253; }
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    background: #f8f9ff;
+    border-bottom: 2px solid #e0e7ff;
+  }
+  .tab {
+    flex: 1;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    font-size: 0.95em;
+    font-weight: 600;
+    color: #555;
+    transition: all 0.3s;
+    min-width: 120px;
+  }
+  .tab:hover { background: #e8ecff; }
+  .tab.active {
+    background: white;
+    color: #4a5eb5;
+    border-bottom: 3px solid #4facfe;
+  }
+  .content { padding: 30px; min-height: 400px; }
+  .section { display: none; }
+  .section.active { display: block; animation: fadeIn 0.4s; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  h2 { color: #4a5eb5; margin-bottom: 15px; }
+  h3 { color: #2d3748; margin: 15px 0 10px; }
+  .theory-box {
+    background: #f0f4ff;
+    border-left: 5px solid #4facfe;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 15px 0;
+  }
+  .theory-box table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  .theory-box th, .theory-box td {
+    padding: 10px;
+    border: 1px solid #d0d9ff;
+    text-align: left;
+  }
+  .theory-box th { background: #4facfe; color: white; }
+  .theory-box tr:nth-child(even) { background: #e8ecff; }
+  .question {
+    background: #fafbff;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 12px 0;
+    border: 2px solid #e0e7ff;
+  }
+  .question p { margin-bottom: 10px; font-size: 1.05em; }
+  input[type="text"], select {
+    padding: 8px 12px;
+    border: 2px solid #c0c9e0;
+    border-radius: 6px;
+    font-size: 1em;
+    margin: 0 5px;
+    transition: border-color 0.3s;
+  }
+  input[type="text"]:focus, select:focus {
+    outline: none;
+    border-color: #4facfe;
+  }
+  .check-btn, .submit-btn {
+    background: #4facfe;
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 1em;
+  }
+  .check-btn:hover, .submit-btn:hover { background: #3a8fd6; }
+  .feedback {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: bold;
+    display: none;
+  }
+  .feedback.correct {
+    background: #d4edda;
+    color: #155724;
+    display: block;
+  }
+  .feedback.wrong {
+    background: #f8d7da;
+    color: #721c24;
+    display: block;
+  }
+  .options label {
+    display: block;
+    padding: 10px 15px;
+    margin: 5px 0;
+    background: white;
+    border: 2px solid #e0e7ff;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .options label:hover { background: #f0f4ff; border-color: #4facfe; }
+  .options input { margin-right: 10px; }
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 15px 0;
+    padding: 15px;
+    background: #f0f4ff;
+    border-radius: 8px;
+    min-height: 60px;
+  }
+  .word {
+    background: #4facfe;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    user-select: none;
+    transition: transform 0.2s;
+  }
+  .word:hover { transform: scale(1.05); }
+  .word.used { opacity: 0.3; pointer-events: none; }
+  .sentence-area {
+    min-height: 50px;
+    padding: 15px;
+    background: white;
+    border: 2px dashed #c0c9e0;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+  }
+  .sentence-area .word { background: #6c5ce7; }
+  .example {
+    background: #fff9e6;
+    border-left: 4px solid #ffc107;
+    padding: 10px 15px;
+    margin: 8px 0;
+    border-radius: 4px;
+    font-style: italic;
+  }
+  footer {
+    background: #2d3748;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    font-size: 0.9em;
+  }
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.6em; }
+    .tab { font-size: 0.85em; padding: 10px 5px; }
+    .content { padding: 20px 15px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>📘 Present Simple</h1>
+    <p>Interactive English Lesson — A2 Level</p>
+  </header>
+
+  <div class="score-bar">
+    <div>Score: <span id="score">0</span> / <span id="total">0</span></div>
+    <button class="reset-btn" onclick="resetAll()">🔄 Reset</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showSection('theory', this)">📖 Theory</button>
+    <button class="tab" onclick="showSection('activity1', this)">✏️ Fill Blanks</button>
+    <button class="tab" onclick="showSection('activity2', this)">✅ Multiple Choice</button>
+    <button class="tab" onclick="showSection('activity3', this)">🔄 Negative</button>
+    <button class="tab" onclick="showSection('activity4', this)">❓ Questions</button>
+    <button class="tab" onclick="showSection('activity5', this)">🔀 Word Order</button>
+  </div>
+
+  <div class="content">
+
+    <!-- THEORY -->
+    <div id="theory" class="section active">
+      <h2>📖 The Present Simple Tense</h2>
+      <div class="theory-box">
+        <h3>When do we use it?</h3>
+        <p>• Habits and routines: <em>I wake up at 7 a.m.</em></p>
+        <p>• Facts and general truths: <em>The sun rises in the east.</em></p>
+        <p>• Feelings and states: <em>She loves chocolate.</em></p>
+        <p>• Schedules: <em>The train leaves at 9 p.m.</em></p>
+      </div>
+
+      <div class="theory-box">
+        <h3>Structure — Affirmative</h3>
+        <table>
+          <tr><th>Subject</th><th>Verb</th><th>Example</th></tr>
+          <tr><td>I / You / We / They</td><td>base form</td><td>I <b>play</b> tennis.</td></tr>
+          <tr><td>He / She / It</td><td>base + <b>s / es</b></td><td>She <b>plays</b> tennis.</td></tr>
+        </table>
+        <p style="margin-top:10px;">👉 Add <b>-es</b> after verbs ending in -o, -s, -x, -ch, -sh: <em>go → goes, watch → watches</em></p>
+      </div>
+
+      <div class="theory-box">
+        <h3>Structure — Negative</h3>
+        <p><b>don't</b> + base verb (I, you, we, they)</p>
+        <p><b>doesn't</b> + base verb (he, she, it)</p>
+        <div class="example">I don't like coffee. / He doesn't like coffee.</div>
+      </div>
+
+      <div class="theory-box">
+        <h3>Structure — Questions</h3>
+        <p><b>Do</b> + subject + base verb?</p>
+        <p><b>Does</b> + subject + base verb?</p>
+        <div class="example">Do you live here? / Does she work here?</div>
+      </div>
+    </div>
+
+    <!-- ACTIVITY 1: Fill the blanks -->
+    <div id="activity1" class="section">
+      <h2>✏️ Activity 1 — Fill in the blanks</h2>
+      <p>Conjugate the verb in parentheses correctly.</p>
+
+      <div class="question">
+        <p>1. She <input type="text" id="a1q1" placeholder="..."> (live) in Madrid.</p>
+        <div class="feedback" id="f1q1"></div>
+      </div>
+      <div class="question">
+        <p>2. They <input type="text" id="a1q2" placeholder="..."> (play) football every Saturday.</p>
+        <div class="feedback" id="f1q2"></div>
+      </div>
+      <div class="question">
+        <p>3. My brother <input type="text" id="a1q3" placeholder="..."> (watch) TV in the evening.</p>
+        <div class="feedback" id="f1q3"></div>
+      </div>
+      <div class="question">
+        <p>4. I <input type="text" id="a1q4" placeholder="..."> (study) English at school.</p>
+        <div class="feedback" id="f1q4"></div>
+      </div>
+      <div class="question">
+        <p>5. The cat <input type="text" id="a1q5" placeholder="..."> (sleep) on the sofa.</p>
+        <div class="feedback" id="f1q5"></div>
+      </div>
+      <div class="question">
+        <p>6. We <input type="text" id="a1q6" placeholder="..."> (go) to the gym on Mondays.</p>
+        <div class="feedback" id="f1q6"></div>
+      </div>
+
+      <button class="check-btn" onclick="checkActivity1()">Check Answers</button>
+    </div>
+
+    <!-- ACTIVITY 2: Multiple choice -->
+    <div id="activity2" class="section">
+      <h2>✅ Activity 2 — Choose the correct option</h2>
+
+      <div class="question">
+        <p>1. He ___ to school every day.</p>
+        <div class="options" id="a2q1">
+          <label><input type="radio" name="a2q1" value="go"> go</label>
+          <label><input type="radio" name="a2q1" value="goes"> goes</label>
+          <label><input type="radio" name="a2q1" value="going"> going</label>
+        </div>
+        <div class="feedback" id="f2q1"></div>
+      </div>
+
+      <div class="question">
+        <p>2. ___ you speak Spanish?</p>
+        <div class="options" id="a2q2">
+          <label><input type="radio" name="a2q2" value="Do"> Do</label>
+          <label><input type="radio" name="a2q2" value="Does"> Does</label>
+          <label><input type="radio" name="a2q2" value="Are"> Are</label>
+        </div>
+        <div class="feedback" id="f2q2"></div>
+      </div>
+
+      <div class="question">
+        <p>3. Maria ___ coffee.</p>
+        <div class="options" id="a2q3">
+          <label><input type="radio" name="a2q3" value="don't drink"> don't drink</label>
+          <label><input type="radio" name="a2q3" value="doesn't drink"> doesn't drink</label>
+          <label><input type="radio" name="a2q3" value="not drinks"> not drinks</label>
+        </div>
+        <div class="feedback" id="f2q3"></div>
+      </div>
+
+      <div class="question">
+        <p>4. My parents ___ in a bank.</p>
+        <div class="options" id="a2q4">
+          <label><input type="radio" name="a2q4" value="works"> works</label>
+          <label><input type="radio" name="a2q4" value="work"> work</label>
+          <label><input type="radio" name="a2q4" value="working"> working</label>
+        </div>
+        <div class="feedback" id="f2q4"></div>
+      </div>
+
+      <div class="question">
+        <p>5. ___ she like pizza?</p>
+        <div class="options" id="a2q5">
+          <label><input type="radio" name="a2q5" value="Do"> Do</label>
+          <label><input type="radio" name="a2q5" value="Does"> Does</label>
+          <label><input type="radio" name="a2q5" value="Is"> Is</label>
+        </div>
+        <div class="feedback" id="f2q5"></div>
+      </div>
+
+      <button class="check-btn" onclick="checkActivity2()">Check Answers</button>
+    </div>
+
+    <!-- ACTIVITY 3: Make negative -->
+    <div id="activity3" class="section">
+      <h2>🔄 Activity 3 — Make the sentence negative</h2>
+      <p>Type the negative form of each sentence.</p>
+
+      <div class="question">
+        <p>1. I like apples. → <input type="text" id="a3q1" style="width:80%;" placeholder="..."></p>
+        <div class="feedback" id="f3q1"></div>
+      </div>
+      <div class="question">
+        <p>2. She speaks French. → <input type="text" id="a3q2" style="width:80%;" placeholder="..."></p>
+        <div class="feedback" id="f3q2"></div>
+      </div>
+      <div class="question">
+        <p>3. They play tennis. → <input type="text" id="a3q3" style="width:80%;" placeholder="..."></p>
+        <div class="feedback" id="f3q3"></div>
+      </div>
+      <div class="question">
+        <p>4. He watches TV. → <input type="text" id="a3q4" style="width:80%;" placeholder="..."></p>
+        <div class="feedback" id="f3q4"></div>
+      </div>
+      <div class="question">
+        <p>5. We live in London. → <input type="text" id="a3q5" style="width:80%;" placeholder="..."></p>
+        <div class="feedback" id="f3q5"></div>
+      </div>
+
+      <button class="check-btn" onclick="checkActivity3()">Check Answers</button>
+    </div>
+
+    <!-- ACTIVITY 4: Questions -->
+    <div id="activity4" class="section">
+      <h2>❓ Activity 4 — Form a question</h2>
+      <p>Choose the correct question form.</p>
+
+      <div class="question">
+        <p>1. (you / live / here)</p>
+        <div class="options" id="a4q1">
+          <label><input type="radio" name="a4q1" value="Do you live here?"> Do you live here?</label>
+          <label><input type="radio" name="a4q1" value="Does you live here?"> Does you live here?</label>
+          <label><input type="radio" name="a4q1" value="You live here?"> You live here?</label>
+        </div>
+        <div class="feedback" id="f4q1"></div>
+      </div>
+
+      <div class="question">
+        <p>2. (she / work / in a hospital)</p>
+        <div class="options" id="a4q2">
+          <label><input type="radio" name="a4q2" value="Do she work in a hospital?"> Do she work in a hospital?</label>
+          <label><input type="radio" name="a4q2" value="Does she works in a hospital?"> Does she works in a hospital?</label>
+          <label><input type="radio" name="a4q2" value="Does she work in a hospital?"> Does she work in a hospital?</label>
+        </div>
+        <div class="feedback" id="f4q2"></div>
+      </div>
+
+      <div class="question">
+        <p>3. (they / speak / English)</p>
+        <div class="options" id="a4q3">
+          <label><input type="radio" name="a4q3" value="Do they speak English?"> Do they speak English?</label>
+          <label><input type="radio" name="a4q3" value="Does they speak English?"> Does they speak English?</label>
+          <label><input type="radio" name="a4q3" value="They speak English?"> They speak English?</label>
+        </div>
+        <div class="feedback" id="f4q3"></div>
+      </div>
+
+      <div class="question">
+        <p>4. (your brother / play / guitar)</p>
+        <div class="options" id="a4q4">
+          <label><input type="radio" name="a4q4" value="Do your brother play guitar?"> Do your brother play guitar?</label>
+          <label><input type="radio" name="a4q4" value="Does your brother play guitar?"> Does your brother play guitar?</label>
+          <label><input type="radio" name="a4q4" value="Does your brother plays guitar?"> Does your brother plays guitar?</label>
+        </div>
+        <div class="feedback" id="f4q4"></div>
+      </div>
+
+      <div class="question">
+        <p>5. (you / like / chocolate)</p>
+        <div class="options" id="a4q5">
+          <label><input type="radio" name="a4q5" value="Does you like chocolate?"> Does you like chocolate?</label>
+          <label><input type="radio" name="a4q5" value="Do you like chocolate?"> Do you like chocolate?</label>
+          <label><input type="radio" name="a4q5" value="You like chocolate?"> You like chocolate?</label>
+        </div>
+        <div class="feedback" id="f4q5"></div>
+      </div>
+
+      <button class="check-btn" onclick="checkActivity4()">Check Answers</button>
+    </div>
+
+    <!-- ACTIVITY 5: Word Order -->
+    <div id="activity5" class="section">
+      <h2>🔀 Activity 5 — Put the words in the correct order</h2>
+      <p>Click the words in the correct order to form a sentence.</p>
+
+      <div class="question">
+        <p><b>1.</b> Words: <span id="bank5q1"></span></p>
+        <div class="sentence-area" id="area5q1"></div>
+        <div class="feedback" id="f5q1"></div>
+      </div>
+
+      <div class="question">
+        <p><b>2.</b> Words: <span id="bank5q2"></span></p>
+        <div class="sentence-area" id="area5q2"></div>
+        <div class="feedback" id="f5q2"></div>
+      </div>
+
+      <div class="question">
+        <p><b>3.</b> Words: <span id="bank5q3"></span></p>
+        <div class="sentence-area" id="area5q3"></div>
+        <div class="feedback" id="f5q3"></div>
+      </div>
+
+      <div class="question">
+        <p><b>4.</b> Words: <span id="bank5q4"></span></p>
+        <div class="sentence-area" id="area5q4"></div>
+        <div class="feedback" id="f5q4"></div>
+      </div>
+
+      <div class="question">
+        <p><b>5.</b> Words: <span id="bank5q5"></span></p>
+        <div class="sentence-area" id="area5q5"></div>
+        <div class="feedback" id="f5q5"></div>
+      </div>
+
+      <button class="check-btn" onclick="checkActivity5()">Check Answers</button>
+    </div>
+
+  </div>
+
+  <footer>
+    📘 Present Simple Lesson — A2 Level — Keep practicing every day! 💪
+  </footer>
+</div>
+
+<script>
+  // ============ TAB NAVIGATION ============
+  function showSection(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // ============ SCORE SYSTEM ============
+  let score = 0;
+  let total = 0;
+  const answered = {};
+
+  function updateScore() {
+    document.getElementById('score').textContent = score;
+    document.getElementById('total').textContent = total;
+  }
+
+  function markAnswered(key, correct, feedbackId, correctText) {
+    const fb = document.getElementById(feedbackId);
+    if (answered[key]) return false;
+    answered[key] = true;
+    total++;
+    if (correct) {
+      score++;
+      fb.className = 'feedback correct';
+      fb.textContent = '✅ Correct! ' + (correctText || '');
+    } else {
+      fb.className = 'feedback wrong';
+      fb.textContent = '❌ Incorrect. ' + (correctText || '');
+    }
+    updateScore();
+    return true;
+  }
+
+  // ============ ACTIVITY 1: Fill blanks ============
+  const a1Answers = {
+    a1q1: 'lives',
+    a1q2: 'play',
+    a1q3: 'watches',
+    a1q4: 'study',
+    a1q5: 'sleeps',
+    a1q6: 'go'
+  };
+
+  function checkActivity1() {
+    for (const [id, ans] of Object.entries(a1Answers)) {
+      const val = document.getElementById(id).value.trim().toLowerCase();
+      markAnswered(id, val === ans, 'f' + id.slice(1),
+        val === ans ? '' : `The correct answer is "${ans}".`);
+    }
+  }
+
+  // ============ ACTIVITY 2: Multiple choice ============
+  const a2Answers = {
+    a2q1: 'goes',
+    a2q2: 'Do',
+    a2q3: "doesn't drink",
+    a2q4: 'work',
+    a2q5: 'Does'
+  };
+
+  function checkActivity2() {
+    for (const [name, ans] of Object.entries(a2Answers)) {
+      const selected = document.querySelector(`input[name="${name}"]:checked`);
+      const val = selected ? selected.value : null;
+      markAnswered(name, val === ans, 'f' + name.slice(1),
+        val === ans ? '' : `The correct answer is "${ans}".`);
+    }
+  }
+
+  // ============ ACTIVITY 3: Negative sentences ============
+  const a3Answers = {
+    a3q1: ["i don't like apples.", "i do not like apples."],
+    a3q2: ["she doesn't speak french.", "she does not speak french."],
+    a3q3: ["they don't play tennis.", "they do not play tennis."],
+    a3q4: ["he doesn't watch tv.", "he does not watch tv."],
+    a3q5: ["we don't live in london.", "we do not live in london."]
+  };
+
+  function checkActivity3() {
+    for (const [id, options] of Object.entries(a3Answers)) {
+      const val = document.getElementById(id).value.trim().toLowerCase();
+      const correct = options.includes(val);
+      markAnswered(id, correct, 'f' + id.slice(1),
+        correct ? '' : `Correct: "${options[0]}"`);
+    }
+  }
+
+  // ============ ACTIVITY 4: Questions ============
+  const a4Answers = {
+    a4q1: 'Do you live here?',
+    a4q2: 'Does she work in a hospital?',
+    a4q3: 'Do they speak English?',
+    a4q4: 'Does your brother play guitar?',
+    a4q5: 'Do you like chocolate?'
+  };
+
+  function checkActivity4() {
+    for (const [name, ans] of Object.entries(a4Answers)) {
+      const selected = document.querySelector(`input[name="${name}"]:checked`);
+      const val = selected ? selected.value : null;
+      markAnswered(name, val === ans, 'f' + name.slice(1),
+        val === ans ? '' : `The correct answer is "${ans}".`);
+    }
+  }
+
+  // ============ ACTIVITY 5: Word Order ============
+  const a5Data = [
+    { words: ['She', 'reads', 'books', 'every', 'day.'], answer: 'She reads books every day.' },
+    { words: ['Do', 'you', 'like', 'coffee', '?'], answer: 'Do you like coffee?' },
+    { words: ['He', "doesn't", 'play', 'tennis.'], answer: "He doesn't play tennis." },
+    { words: ['They', 'work', 'in', 'a', 'hospital.'], answer: 'They work in a hospital.' },
+    { words: ['Does', 'she', 'speak', 'English', '?'], answer: 'Does she speak English?' }
+  ];
+
+  function initActivity5() {
+    a5Data.forEach((q, i) => {
+      const bankId = 'bank5q' + (i+1);
+      const areaId = 'area5q' + (i+1);
+      const bank = document.getElementById(bankId);
+      const shuffled = [...q.words].sort(() => Math.random() - 0.5);
+      shuffled.forEach((w, idx) => {
+        const span = document.createElement('span');
+        span.className = 'word';
+        span.textContent = w;
+        span.dataset.q = i;
+        span.dataset.idx = idx;
+        span.onclick = () => moveWord(span, areaId);
+        bank.appendChild(span);
+      });
+    });
+  }
+
+  function moveWord(span, areaId) {
+    const area = document.getElementById(areaId);
+    const clone = span.cloneNode(true);
+    clone.onclick = () => {
+      span.classList.remove('used');
+      clone.remove();
+    };
+    area.appendChild(clone);
+    span.classList.add('used');
+  }
+
+  function checkActivity5() {
+    a5Data.forEach((q, i) => {
+      const area = document.getElementById('area5q' + (i+1));
+      const words = Array.from(area.children).map(c => c.textContent);
+      const sentence = words.join(' ');
+      markAnswered('a5q' + (i+1), sentence === q.answer, 'f5q' + (i+1),
+        sentence === q.answer ? '' : `Correct: "${q.answer}"`);
+    });
+  }
+
+  // ============ RESET ============
+  function resetAll() {
+    if (!confirm('Reset all progress?')) return;
+    score = 0;
+    total = 0;
+    for (const k in answered) delete answered[k];
+    document.querySelectorAll('input[type="text"]').forEach(i => i.value = '');
+    document.querySelectorAll('input[type="radio"]').forEach(i => i.checked = false);
+    document.querySelectorAll('.feedback').forEach(f => {
+      f.className = 'feedback';
+      f.textContent = '';
+    });
+    document.querySelectorAll('.sentence-area').forEach(a => a.innerHTML = '');
+    document.querySelectorAll('.word-bank').forEach(b => b.innerHTML = '');
+    initActivity5();
+    updateScore();
+  }
+
+  // ============ INIT ============
+  initActivity5();
+  updateScore();
+</script>
+</body>
+</html>
